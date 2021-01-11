@@ -1,23 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const { check, validationResult } = require('express-validator');
+const { check, validationResult, body } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwtoken = require('jsonwebtoken');
 const config = require('config');
+const bodyParser = require('body-parser');
 
 const User = require('../../models/User');
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // @route     POST api/user
 // @desc      Register
 // @access    Public
 
-router.post('/', [
+router.post('/', urlencodedParser, [
   check('firstName', 'First Name is required').not().isEmpty(),
   check('lastName', 'Last Name is required').not().isEmpty(),
   check('email', 'Please include a valid email').isEmail(),
   check('password', 'Please enter a password with 6 or more characters').isLength({min: 6})
 ],
 async (req, res) => {
+  console.log(1);
   console.log(req.body);
   const errors = validationResult(req);
   if(!errors.isEmpty()) {

@@ -5,9 +5,13 @@ const jwtoken = require('jsonwebtoken');
 const config = require('config');
 const bcrypt = require('bcryptjs');
 const { check, validationResult } = require('express-validator');
+const bodyParser = require('body-parser');
 
 const User = require('../../models/User');
 
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 // @route     GET api/auth
 // @desc      Test route
@@ -27,10 +31,13 @@ router.get('/', auth, async (req, res) => {
 // @desc      Authenticate user and get token
 // @access    Public
 
-router.post('/',
+router.post('/', urlencodedParser, [
   check('email', 'Please include a valid email').isEmail(),
   check('password', 'Password is required ').exists(),
+  ],
 async (req, res) => {
+  
+  console.log(req.body);
   const errors = validationResult(req);
   if(!errors.isEmpty()) {
      return res.status(400).json({errors: errors.array()})
@@ -41,14 +48,14 @@ async (req, res) => {
     // See if user exist
     let user = await User.findOne({ email });
     if(!user) {
-      res.status(400).json({msg: 'Invalid Credentials'});
+      res.status(400).json({msg: 'Invalid email'});
     }
 
     // Match the password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if(!isMatch) {
-      res.status(400).json({msg: 'Invalid Credentials'});
+      res.status(400).json({msg: 'Invalid password'});
     }
 
     // Return jsonwebtoken

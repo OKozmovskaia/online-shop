@@ -2,7 +2,6 @@ const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
 
-
 const app = express();
 
 // Connect DB
@@ -14,7 +13,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Init middleware
 app.use(express.json({ extended: false }));
 
-app.get('/', (req,res) => res.send('API Running'));
+
+
+app.get('/', (req,res) => {
+  res.send('API Running');
+  res.render('index');
+});
 
 // Define router
 app.use('/api/user', require('./routes/api/user'));
