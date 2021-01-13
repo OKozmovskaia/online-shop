@@ -67,10 +67,9 @@ async (req, res) => {
     jwtoken.sign(
       payload,
       config.get('tokenSecret'),
-      { expiresIn: 36000  },
       (err, token) => {
         if(err) throw err;
-        res.json({ token });
+        res.json({ user, token });
       });
 
   } catch (err) {

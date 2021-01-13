@@ -1,6 +1,7 @@
 /** ADD YOUR AWESOME CODES HERE **/
 
-#formRegisterCustom {
+#formRegisterCustom,
+#formLoginCustom {
   width: 700px;
   margin: auto;
   padding: 50px;

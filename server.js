@@ -4,6 +4,11 @@ const path = require('path');
 
 const app = express();
 
+// render html
+app.engine('ejs', require('ejs-locals'));
+app.set('views', (__dirname, 'views'));
+app.set('view engine', 'ejs');
+
 // Connect DB
 connectDB();
 
@@ -24,6 +29,7 @@ app.get('/', (req,res) => {
 app.use('/api/user', require('./routes/api/user'));
 app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/account', require('./routes/api/account'));
+app.use('/api/about', require('./routes/api/about'));
 
 const PORT = process.env.PORT || 5000;
 
