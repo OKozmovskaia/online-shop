@@ -9,7 +9,7 @@ const User = require('../../models/User');
 // @desc      Get current user
 // @access    Private
 
-router.get('/me', auth, async(req, res) => {
+router.get('/', auth, async(req, res) => {
   try {
     const account = await Account.findOne({user: req.user.id}).populate('user', ['firstName', 'lastName']);
 
@@ -17,7 +17,7 @@ router.get('/me', auth, async(req, res) => {
       return res.status(400).json({ msg: 'There is no account for this user' });
     };
 
-    res.send(account);
+    res.render('account');
     
   } catch (err) {
     console.error(err);
