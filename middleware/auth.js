@@ -1,19 +1,18 @@
 const jwtoken = require('jsonwebtoken');
 const config = require('config');
-// const User = require('../models/User')
+
 
 module.exports = function(req, res, next) {
-  const token = req.header('x-auth-token');
-
+  const token = req.cookies.token_cookie;
+  
   // Check if not token
   if(!token) {
-    return res.status(401).send({ msg: 'Authorization denied' });
+    return res.status(401).render('error', { msg: 'Authorization denied. Please, sign in or register.' });
   };
 
   // Verify token
   try {
     const decoded = jwtoken.verify(token, config.get('tokenSecret'));
-    // const user = await User.findOne({_id: decoded._id, 'tokens.token': token})
     req.user = decoded.user;
     next();
   } catch (err) {

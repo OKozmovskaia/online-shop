@@ -37,7 +37,6 @@ router.post('/', urlencodedParser, [
   ],
 async (req, res) => {
   
-  console.log(req.body);
   const errors = validationResult(req);
   if(!errors.isEmpty()) {
      return res.status(400).json({errors: errors.array()})
@@ -63,14 +62,14 @@ async (req, res) => {
       user: {
         id: user.id,
       }
-    }
-    jwtoken.sign(
+    };
+
+    const token = jwtoken.sign(
       payload,
       config.get('tokenSecret'),
-      (err, token) => {
-        if(err) throw err;
-        res.json({ user, token });
-      });
+      { expiresIn: '1 day' }
+      );
+    res.cookie('token_cookie', token, {httpOnly: true}).render('account', {firstName: user.firstName, lastName: user.lastName});
 
   } catch (err) {
     console.error(err.message);

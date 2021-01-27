@@ -22,8 +22,6 @@ router.post('/', urlencodedParser, [
   check('password', 'Please enter a password with 6 or more characters').isLength({min: 6})
 ],
 async (req, res) => {
-  console.log(1);
-  console.log(req.body);
   const errors = validationResult(req);
   if(!errors.isEmpty()) {
      return res.status(400).json({errors: errors.array()});
@@ -35,7 +33,7 @@ async (req, res) => {
     let user = await User.findOne({ email });
     if(user) {
       res.status(400).json({msg: 'User already exists'});
-    }
+    };
 
     // Init new user
     user = new User({
@@ -43,7 +41,7 @@ async (req, res) => {
       lastName,
       email,
       password
-    })
+    });
 
     // Encrypt password
     const salt = await bcrypt.genSalt(10);
@@ -56,16 +54,14 @@ async (req, res) => {
       user: {
         id: user.id,
       }
-    }
-    jwtoken.sign(
+    };
+    const token = jwtoken.sign(
       payload,
-      config.get('tokenSecret'),
-      { expiresIn: 36000  },
-      (err, token) => {
-        if(err) throw err;
-        res.json({ token });
-      });
-
+      config.get('tokenSecret')
+     );
+    
+    res.cookie('token_cookie', token, {maxAge:900000, httpOnly: true}).render('index');
+    
   } catch (err) {
     console.error(err.message);
     res.status(500).send('Server error');

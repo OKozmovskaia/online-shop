@@ -1,23 +1,29 @@
 const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const jwtoken = require('jsonwebtoken');
+const config = require('config');
 
-const Account = require('../../models/Account');
 const User = require('../../models/User');
 
-// @route     GET api/account/me
+// @route     GET api/wishlist
 // @desc      Get current user
 // @access    Private
 
 router.get('/', auth, async(req, res) => {
-  try {
-    const account = await Account.findOne({user: req.user.id}).populate('user', ['firstName', 'lastName']);
+  const token = req.cookies.token_cookie;
+  const decoded = jwtoken.verify(token, config.get('tokenSecret'));
+  const { id } = decoded.user;
 
-    if(!account) {
-      return res.status(400).json({ msg: 'There is no account for this user' });
+  try {
+    const user = await User.findOne({ _id: id }).exec();
+    
+    if(!user) {
+      return res.status(400).render('error', { msg: 'Please, sign in' });
     };
 
-    res.render('account');
+    res.setHeader('Content-Type', 'text/html');
+    res.render('account', {firstName: user.firstName, lastName: user.lastName});
     
   } catch (err) {
     console.error(err);

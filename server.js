@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const path = require('path');
+const cookieParser = require('cookie-parser')
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.set('view engine', 'ejs');
 
 // Connect DB
 connectDB();
+
+// Parse of cookies
+app.use(cookieParser());
 
 // Render html-pages
 app.use(express.static(path.join(__dirname, 'public')));
@@ -28,8 +32,9 @@ app.get('/', (req,res) => {
 // Define router
 app.use('/api/user', require('./routes/api/user'));
 app.use('/api/auth', require('./routes/api/auth'));
-app.use('/api/account', require('./routes/api/account'));
+app.use('/api/logout', require('./routes/api/logout'));
 
+app.use('/api/account', require('./routes/api/account'));
 app.use('/api/about', require('./routes/api/about'));
 app.use('/api/cart', require('./routes/api/cart'));
 app.use('/api/checkout', require('./routes/api/checkout'));
