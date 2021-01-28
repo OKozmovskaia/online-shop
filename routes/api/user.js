@@ -60,7 +60,7 @@ async (req, res) => {
       config.get('tokenSecret')
      );
     
-    res.cookie('token_cookie', token, {maxAge:900000, httpOnly: true}).render('index');
+    res.cookie('token_cookie', token, { httpOnly: true}).render('index');
     
   } catch (err) {
     console.error(err.message);

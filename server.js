@@ -37,6 +37,7 @@ app.use('/api/logout', require('./routes/api/logout'));
 app.use('/api/account', require('./routes/api/account'));
 app.use('/api/about', require('./routes/api/about'));
 app.use('/api/cart', require('./routes/api/cart'));
+app.use('/api/add-to-card', require('./routes/api/add-to-card'));
 app.use('/api/checkout', require('./routes/api/checkout'));
 app.use('/api/contact', require('./routes/api/contact'));
 app.use('/api/detail', require('./routes/api/detail'));
